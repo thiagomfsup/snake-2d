@@ -3,7 +3,7 @@
 A Snake game implementation written in Java.
 
 ## Instructions
-Use the arrows keys (`&#8593;`, `&#8594;`, `&#8595;`, `&#8592;`) to navigate the snake up, right, down and left. 
+Use the arrows keys (&#8593;, &#8594;, &#8595;, &#8592;) to navigate the snake up, right, down and left. 
 
 The object is to feed the snake with apples, the red dots that appears randomly during the game play. 
 
