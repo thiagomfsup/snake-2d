@@ -1,5 +1,6 @@
 package com.tmf.snake2d;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,7 +13,11 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 
 import com.tmf.snake2d.model.Apple;
 import com.tmf.snake2d.model.Direction;
@@ -74,16 +79,46 @@ public class GameBoard extends JPanel {
     private boolean inGame;
 
     /**
+     * Indicate the score during a game play.
+     */
+    private int score;
+
+    /**
+     * JLabel where the score will be displayed.
+     */
+    private JLabel scoreLabel;
+
+    /**
      * The GameBoard constructor method.
      */
     public GameBoard() {
+        final int statusBarHeight = 32;
+
         // The JPanel size is defined by the SIZE multiplied by SPRITE_SIZE. It means
         // that the JPanel must be capable of accommodate SIZE * SPRITE_SIZE game
         // sprites.
         int boardSize = SIZE * SPRITE_SIZE;
-        setPreferredSize(new Dimension(boardSize, boardSize));
+        setPreferredSize(new Dimension(boardSize, boardSize + statusBarHeight));
 
         setFocusable(true);
+
+        // add status bar
+        this.setLayout(new BorderLayout());
+
+        JPanel statusBar = new JPanel();
+        statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        statusBar.setPreferredSize(new Dimension(boardSize, statusBarHeight));
+        statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
+        this.add(statusBar, BorderLayout.SOUTH);
+
+        JLabel scoreTextLabel = new JLabel("Score: ");
+        scoreTextLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
+        scoreLabel = new JLabel("");
+        scoreLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
+        statusBar.add(scoreTextLabel);
+        statusBar.add(scoreLabel);
 
         // add KeyListener
         this.addKeyListener(new KeyListener() {
@@ -128,7 +163,10 @@ public class GameBoard extends JPanel {
      */
     public void init() {
         inGame = true;
+        score = 0;
         snake.init(SIZE / 2, SIZE / 2);
+
+        notifyScoreChange();
         nextApple();
 
         if (timer != null)
@@ -179,9 +217,18 @@ public class GameBoard extends JPanel {
         }
 
         if (snakeHead.equals(apple)) {
+            score++;
+            notifyScoreChange();
             snake.feed();
             nextApple();
         }
+    }
+
+    /**
+     * Notify that the score changed.
+     */
+    private void notifyScoreChange() {
+        scoreLabel.setText(String.valueOf(score));
     }
 
     /**
