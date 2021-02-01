@@ -5,13 +5,10 @@ package com.tmf.snake2d.model;
  */
 public enum Direction {
 
-    UP, RIGHT, DOWN, LEFT;
+    UP { public boolean isOpposite(Direction other) { return DOWN == other; } },
+    RIGHT { public boolean isOpposite(Direction other) { return LEFT == other; } },
+    DOWN { public boolean isOpposite(Direction other) { return UP == other; } },
+    LEFT { public boolean isOpposite(Direction other) { return RIGHT == other; } };
 
-    public boolean isOpposite(Direction other) {
-
-        // FIXME can't it be simpler?
-        return (this == UP && other == DOWN) || (this == DOWN && other == UP) || (this == RIGHT && other == LEFT)
-                || (this == LEFT && other == RIGHT);
-    }
-
+    public abstract boolean isOpposite(Direction other);
 }
