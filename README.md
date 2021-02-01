@@ -36,6 +36,7 @@ java -cp target com.tmf.snake2d.Snake2D
 
 * Tania Rascia's [Writing a Snake Game for the Terminal in JavaScript](https://www.taniarascia.com/snake-game-in-javascript/) blog for the initial inspiration.
 * Google's [Snake](https://www.google.com/search?q=play+snake) as a source of ideas for game improvements.
+* [Leonel Gayard](https://github.com/leonelag) for reviewing the code and give me some code improvement suggestions.
 
 ## License
 
