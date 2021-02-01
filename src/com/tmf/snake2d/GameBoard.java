@@ -10,8 +10,6 @@ import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -19,9 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
-import com.tmf.snake2d.model.Apple;
 import com.tmf.snake2d.model.Direction;
-import com.tmf.snake2d.model.Snake;
+import com.tmf.snake2d.model.Point;
 import com.tmf.snake2d.model.Snake.SnakePart;
 
 /**
@@ -32,12 +29,6 @@ import com.tmf.snake2d.model.Snake.SnakePart;
 public class GameBoard extends JPanel {
 
     private static final long serialVersionUID = -959215068747060017L;
-
-    /**
-     * Game speed.
-     */
-    // TODO allow speed to be selected or even vary speed during the game play.
-    private static final long GAME_SPEED = 100L;
 
     /**
      * The size of the board.
@@ -59,34 +50,15 @@ public class GameBoard extends JPanel {
      */
     private static final int SPRITE_SIZE = 32;
 
-    private Snake snake = new Snake();
-
-    private Apple apple = new Apple();
-
-    /**
-     * The {@link Timer} that controls the clock tick.
-     */
-    private Timer timer;
-
-    /**
-     * Flag to prevent changing direction more than once at the same clock tick.
-     */
-    private boolean changedDirectionAtCurrentTick = false;
-
-    /**
-     * Flag that indicates if the game is being played.
-     */
-    private boolean inGame;
-
-    /**
-     * Indicate the score during a game play.
-     */
-    private int score;
-
     /**
      * JLabel where the score will be displayed.
      */
     private JLabel scoreLabel;
+
+    /**
+     * The game controller.
+     */
+    private GameController gameController;
 
     /**
      * The GameBoard constructor method.
@@ -132,9 +104,6 @@ public class GameBoard extends JPanel {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (changedDirectionAtCurrentTick)
-                    return;
-
                 Direction newDirection;
                 switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
@@ -153,105 +122,30 @@ public class GameBoard extends JPanel {
                     return;
                 }
 
-                changedDirectionAtCurrentTick = snake.changeDirection(newDirection);
+                gameController.notifyChangeDirection(newDirection);
             }
         });
     }
 
     /**
-     * Start a new game
+     * Set the GameController.
+     * 
+     * @param gameController
      */
-    public void init() {
-        inGame = true;
-        score = 0;
-        snake.init(SIZE / 2, SIZE / 2);
-
-        notifyScoreChange();
-        nextApple();
-
-        if (timer != null)
-            timer.cancel();
-
-        timer = new Timer("board-timer");
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                process();
-            }
-        }, 0L, GAME_SPEED);
-    }
-
-    /**
-     * Process the game play.
-     * <p>
-     * It is supposed to run at each clock tick.
-     */
-    public void process() {
-        changedDirectionAtCurrentTick = false;
-
-        if (!snake.move()) {
-            endGame();
-        }
-
-        checkCollisions();
-
-        this.repaint();
-    }
-
-    /**
-     * Check if:
-     * <ul>
-     * <li>the Snake is still on the board.
-     * <li>the Snake eats an apple.
-     * </ul>
-     */
-    private void checkCollisions() {
-        SnakePart snakeHead = snake.head();
-
-        // check if snakeHead is still on the board.
-        int x = snakeHead.getX(), y = snakeHead.getY();
-        if (x < 0 || y < 0 || x >= SIZE || y >= SIZE) {
-            endGame();
-
-            return;
-        }
-
-        if (snakeHead.equals(apple)) {
-            score++;
-            notifyScoreChange();
-            snake.feed();
-            nextApple();
-        }
+    public void setGameControler(GameController gameController) {
+        this.gameController = gameController;
     }
 
     /**
      * Notify that the score changed.
      */
-    private void notifyScoreChange() {
+    public void notifyScoreChange(int score) {
         scoreLabel.setText(String.valueOf(score));
-    }
-
-    /**
-     * Move the apple to the next point and ensure that it does not collide with the
-     * snake.
-     */
-    private void nextApple() {
-        do {
-            apple.moveToRandomPoint(SIZE);
-        } while (!snake.collidesWithSnake(apple));
-    }
-
-    /**
-     * Notify the end of the game.
-     */
-    private void endGame() {
-        inGame = false;
-        timer.cancel();
     }
 
     @Override
     public void paint(Graphics g) {
-        if (!inGame)
+        if (!gameController.isInGame())
             return;
 
         super.paint(g);
@@ -260,6 +154,7 @@ public class GameBoard extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         // paint apple
+        Point apple = gameController.getApplePosition();
         Ellipse2D appleGraphic = new Ellipse2D.Double(apple.getX() * SPRITE_SIZE, apple.getY() * SPRITE_SIZE,
                 SPRITE_SIZE, SPRITE_SIZE);
         g2d.setColor(Color.BLACK);
@@ -268,7 +163,8 @@ public class GameBoard extends JPanel {
         g2d.fill(appleGraphic);
 
         // paint snake
-        Iterator<SnakePart> iterator = snake.iterator();
+
+        Iterator<SnakePart> iterator = gameController.getSnakeIterator();
         while (iterator.hasNext()) {
             SnakePart snakepart = iterator.next();
 
