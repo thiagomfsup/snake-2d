@@ -2,12 +2,14 @@
 
 A Snake game implementation written in Java.
 
+The goal is to feed the snake with apples, the red dots that appears randomly during the game play.
+
+Snake must be kept in the board limits and must not collide with itself. Failure to keep those constraints cause the game to end.
+
 ## Instructions
-Use the arrows keys (&#8593;, &#8594;, &#8595;, &#8592;) to navigate the snake up, right, down and left. 
+Use the arrows keys (&#8593;, &#8594;, &#8595;, &#8592;) to navigate the snake up, right, down and left.
 
-The object is to feed the snake with apples, the red dots that appears randomly during the game play. 
-
-Snake must be kept in the board limits and must not collides with itself. Failure to keep those constraints cause the game to end.
+Press F2 to pause.
 
 ### Prerequisites
 

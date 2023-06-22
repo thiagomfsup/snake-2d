@@ -118,6 +118,8 @@ public class GameBoard extends JPanel {
                 case KeyEvent.VK_RIGHT:
                     newDirection = Direction.RIGHT;
                     break;
+                    case KeyEvent.VK_F2:
+                    gameController.pauseOrResume();
                 default:
                     return;
                 }

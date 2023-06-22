@@ -19,7 +19,7 @@ public class GameController {
      * Game speed.
      */
     // TODO allow speed to be selected or even vary speed during the game play.
-    private static final long GAME_SPEED = 100L;
+    private static final long GAME_SPEED = 140L;
 
     private GameBoard gameBoard;
 
@@ -43,6 +43,11 @@ public class GameController {
     private boolean inGame;
 
     /**
+     * Flag that indicates the game is paused.
+     */
+    private boolean paused;
+
+    /**
      * Indicate the score during a game play.
      */
     private int score;
@@ -56,12 +61,17 @@ public class GameController {
      */
     public void init() {
         inGame = true;
+        paused = false;
         score = 0;
         snake.init(GameBoard.SIZE / 2, GameBoard.SIZE / 2);
 
         gameBoard.notifyScoreChange(score);
         nextApple();
 
+        registerTimer();
+    }
+
+    private void registerTimer() {
         if (timer != null)
             timer.cancel();
 
@@ -131,12 +141,26 @@ public class GameController {
      */
     private void endGame() {
         inGame = false;
+        paused = false;
         timer.cancel();
+    }
+
+    private void pauseGame() {
+        inGame = false;
+        paused = true;
+        timer.cancel();
+    }
+
+    private void resumeGame() {
+        inGame = true;
+        paused = false;
+
+        registerTimer();
     }
 
     /**
      * Notify that Snake should take another direction.
-     * 
+     *
      * @param newDirection The new direction.
      */
     public void notifyChangeDirection(Direction newDirection) {
@@ -148,7 +172,7 @@ public class GameController {
 
     /**
      * Verify if a game play is taking place.
-     * 
+     *
      * @return
      */
     public boolean isInGame() {
@@ -157,7 +181,7 @@ public class GameController {
 
     /**
      * Get the Apple position.
-     * 
+     *
      * @return The Apple position.
      */
     public Point getApplePosition() {
@@ -168,10 +192,17 @@ public class GameController {
 
     /**
      * Return an {@link Iterator} that allows traversing through a Snake parts.
-     * 
+     *
      * @return
      */
     public Iterator<SnakePart> getSnakeIterator() {
         return snake.iterator();
+    }
+
+    public void pauseOrResume() {
+        if (paused)
+            resumeGame();
+        else
+            pauseGame();
     }
 }
