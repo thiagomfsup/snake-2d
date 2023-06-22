@@ -11,22 +11,25 @@ Snake must be kept in the board limits and must not collides with itself. Failur
 
 ### Prerequisites
 
-Java JDK must be installed in your environment in order to compile and run this project.
+* Java JDK 17+
+* Maven 3.8.4+
 
 ### Installing
 
-Clone this repository, compile it, and them run it:
+Clone this repository and compile it:
 
 ```bash
 git clone https://github.com/thiagomfsup/snake-2d.git
 cd snake-2d
 
-mkdir target
-
-javac -s src -d target src\com\tmf\snake2d\*.java src\com\tmf\snake2d\model\*.java
-
-java -cp target com.tmf.snake2d.Snake2D
+mvn package
 ```
+
+An executable Jar file will be created. Double-click on it or execute the following command to start playing:
+```bash
+java -jar ./target/snake-2d-1.0-SNAPSHOT.jar
+```
+
 
 ## Authors
 
