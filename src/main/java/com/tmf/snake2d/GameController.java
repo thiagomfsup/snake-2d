@@ -60,6 +60,9 @@ public class GameController {
      * Start a new game
      */
     public void init() {
+        if (inGame)
+            return;
+
         inGame = true;
         paused = false;
         score = 0;
