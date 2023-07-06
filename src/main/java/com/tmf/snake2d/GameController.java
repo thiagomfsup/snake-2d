@@ -63,7 +63,7 @@ public class GameController {
         inGame = true;
         paused = false;
         score = 0;
-        snake.init(GameBoard.SIZE / 2, GameBoard.SIZE / 2);
+        snake.init(0,0);
 
         gameBoard.notifyScoreChange(score);
         nextApple();
