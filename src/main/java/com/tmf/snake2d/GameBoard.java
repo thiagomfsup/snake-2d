@@ -134,7 +134,7 @@ public class GameBoard extends JPanel {
      * 
      * @param gameController
      */
-    public void setGameControler(GameController gameController) {
+    public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
 

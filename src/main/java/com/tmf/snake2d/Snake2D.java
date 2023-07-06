@@ -25,7 +25,7 @@ public class Snake2D extends JFrame {
         setTitle("Snake 2D");
 
         GameController gameController = new GameController(gameBoard);
-        gameBoard.setGameControler(gameController);
+        gameBoard.setGameController(gameController);
 
         gameController.init();
     }
