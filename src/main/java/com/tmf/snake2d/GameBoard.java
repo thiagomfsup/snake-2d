@@ -11,6 +11,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -91,6 +92,8 @@ public class GameBoard extends JPanel {
 
         statusBar.add(scoreTextLabel);
         statusBar.add(scoreLabel);
+        statusBar.add(Box.createHorizontalGlue());
+        statusBar.add(new JLabel("F2 - Pause | F3 - Restart "));
 
         // add KeyListener
         this.addKeyListener(new KeyListener() {
