@@ -63,7 +63,7 @@ public class Snake {
      */
     public boolean move() {
         SnakePart futureHead = new SnakePart();
-        futureHead.setCoordinate(parts.getFirst());
+        futureHead.moveTo(parts.getFirst().position);
 
         // check direction
         switch (currentDirection) {
@@ -83,7 +83,7 @@ public class Snake {
 
         // Check if the future position SnakePart collides with another SnakePart.
         // If collision is detected, return quickly.
-        if (parts.stream().filter(snakePart -> snakePart.equals(futureHead)).count() != 0)
+        if (collidesWith(futureHead.position))
             return false;
 
         // remove tail
@@ -95,14 +95,14 @@ public class Snake {
     }
 
     /**
-     * Check if the point {@code p} collides with any of the snake part.
+     * Check if the point {@code p} collides with this snake.
      * 
      * @param p The {@code p} point.
      * @return {@code true} if the point {@code p} collides with the snake;
      *         {@code false} otherwise.
      */
-    public boolean collidesWithSnake(Point p) {
-        return parts.stream().filter(snakePart -> snakePart.equals(p)).count() == 0;
+    public boolean collidesWith(Point p) {
+        return parts.stream().anyMatch(part -> part.collidesWith(p));
     }
 
     /**
@@ -132,30 +132,49 @@ public class Snake {
     /**
      * Represents a snake part.
      */
-    public class SnakePart extends Point {
+    public class SnakePart {
+
+        private Point position;
+
         private SnakePart() {
             // TODO why can't it be (0,0). Why this position get printed on the board.
-            super(-1, -1);
+            position = new Point(-1, -1);
         }
 
         private SnakePart(int x, int y) {
-            super(x, y);
+            position = new Point(x, y);
         }
 
         private void moveUp() {
-            setCoordinate(this.getX(), this.getY() - 1);
+            position.setCoordinate(this.position.getX(), this.position.getY() - 1);
         }
 
         private void moveDown() {
-            setCoordinate(this.getX(), this.getY() + 1);
+            position.setCoordinate(this.position.getX(), this.position.getY() + 1);
         }
 
         private void moveLeft() {
-            setCoordinate(this.getX() - 1, this.getY());
+            position.setCoordinate(this.position.getX() - 1, this.position.getY());
         }
 
         private void moveRight() {
-            setCoordinate(this.getX() + 1, this.getY());
+            position.setCoordinate(this.position.getX() + 1, this.position.getY());
+        }
+
+        private void moveTo(Point position) {
+            this.position.setCoordinate(position);
+        }
+
+        public int getPositionX() {
+            return position.getX();
+        }
+
+        public int getPositionY() {
+            return position.getY();
+        }
+
+        public boolean collidesWith(Point point) {
+            return this.position.equals(point);
         }
     }
 }

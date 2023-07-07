@@ -115,14 +115,14 @@ public class GameController {
         SnakePart snakeHead = snake.head();
 
         // check if snakeHead is still on the board.
-        int x = snakeHead.getX(), y = snakeHead.getY();
+        int x = snakeHead.getPositionX(), y = snakeHead.getPositionY();
         if (x < 0 || y < 0 || x >= GameBoard.SIZE || y >= GameBoard.SIZE) {
             endGame();
 
             return;
         }
 
-        if (snakeHead.equals(apple)) {
+        if (snakeHead.collidesWith(apple)) {
             gameBoard.notifyScoreChange(++score);
             snake.feed();
             nextApple();
@@ -136,7 +136,7 @@ public class GameController {
     private void nextApple() {
         do {
             apple.moveToRandomPoint(GameBoard.SIZE);
-        } while (!snake.collidesWithSnake(apple));
+        } while (snake.collidesWith(apple));
     }
 
     /**

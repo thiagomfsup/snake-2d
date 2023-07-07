@@ -172,9 +172,9 @@ public class GameBoard extends JPanel {
         while (iterator.hasNext()) {
             SnakePart snakepart = iterator.next();
 
-            Rectangle2D.Double part = new Rectangle2D.Double(snakepart.getX() * SPRITE_SIZE,
-                    snakepart.getY() * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-            g2d.setColor(Color.GREEN);
+            Rectangle2D.Double part = new Rectangle2D.Double(snakepart.getPositionX() * SPRITE_SIZE,
+                    snakepart.getPositionY() * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+            g2d.setColor(new Color(30, 70, 32));
             g2d.fill(part);
         }
     };
