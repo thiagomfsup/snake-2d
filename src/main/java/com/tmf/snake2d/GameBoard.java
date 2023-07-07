@@ -104,29 +104,26 @@ public class GameBoard extends JPanel {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                Direction newDirection;
                 switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
-                    newDirection = Direction.UP;
+                    gameController.notifyChangeDirection(Direction.UP);
                     break;
                 case KeyEvent.VK_DOWN:
-                    newDirection = Direction.DOWN;
+                    gameController.notifyChangeDirection(Direction.DOWN);
                     break;
                 case KeyEvent.VK_LEFT:
-                    newDirection = Direction.LEFT;
+                    gameController.notifyChangeDirection(Direction.LEFT);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    newDirection = Direction.RIGHT;
+                    gameController.notifyChangeDirection(Direction.RIGHT);
                     break;
                 case KeyEvent.VK_F2:
                     gameController.pauseOrResume();
+                    break;
                 case KeyEvent.VK_F3:
                     gameController.init();
-                default:
-                    return;
+                    break;
                 }
-
-                gameController.notifyChangeDirection(newDirection);
             }
         });
     }
