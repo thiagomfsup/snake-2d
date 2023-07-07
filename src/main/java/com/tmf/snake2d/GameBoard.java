@@ -1,26 +1,27 @@
 package com.tmf.snake2d;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
+import com.tmf.snake2d.model.Direction;
+import com.tmf.snake2d.model.Point;
+import com.tmf.snake2d.model.Snake.SnakePart;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
-
-import com.tmf.snake2d.model.Direction;
-import com.tmf.snake2d.model.Point;
-import com.tmf.snake2d.model.Snake.SnakePart;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Represents the game board where the game takes place.
@@ -57,6 +58,11 @@ public class GameBoard extends JPanel {
     private JLabel scoreLabel;
 
     /**
+     * An image representing an apple.
+     */
+    private Image appleImage;
+
+    /**
      * The game controller.
      */
     private GameController gameController;
@@ -66,6 +72,13 @@ public class GameBoard extends JPanel {
      */
     public GameBoard() {
         final int statusBarHeight = 32;
+
+        try {
+            this.appleImage = ImageIO.read(this.getClass().getClassLoader().getResource("images/apple.png"))
+                    .getScaledInstance(SPRITE_SIZE, SPRITE_SIZE, Image.SCALE_SMOOTH);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load images.");
+        }
 
         // The JPanel size is defined by the SIZE multiplied by SPRITE_SIZE. It means
         // that the JPanel must be capable of accommodate SIZE * SPRITE_SIZE game
@@ -157,17 +170,11 @@ public class GameBoard extends JPanel {
         // paint snake
         Graphics2D g2d = (Graphics2D) g;
 
-        // paint apple
-        Point apple = gameController.getApplePosition();
-        Ellipse2D appleGraphic = new Ellipse2D.Double(apple.getX() * SPRITE_SIZE, apple.getY() * SPRITE_SIZE,
-                SPRITE_SIZE, SPRITE_SIZE);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(appleGraphic);
-        g2d.setColor(Color.RED);
-        g2d.fill(appleGraphic);
+        // paint applePosition
+        Point applePosition = gameController.getApplePosition();
+        g.drawImage(this.appleImage, applePosition.getX() * SPRITE_SIZE, applePosition.getY() * SPRITE_SIZE, this);
 
         // paint snake
-
         Iterator<SnakePart> iterator = gameController.getSnakeIterator();
         while (iterator.hasNext()) {
             SnakePart snakepart = iterator.next();
